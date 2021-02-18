@@ -17,7 +17,7 @@ jest.mock('awscred', () => {
 
 jest.useFakeTimers()
 
-describe('get-token-using-iam', () => {
+describe.skip('get-token-using-iam', () => {
   describe('IamTokenManager', () => {
     let auth
 

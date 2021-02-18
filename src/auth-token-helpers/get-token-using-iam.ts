@@ -1,3 +1,4 @@
+import { TokenFileWebIdentityCredentials } from 'aws-sdk'
 import awscred from 'awscred'
 import retry from 'async-retry'
 import { EventEmitter } from 'events'
@@ -76,12 +77,15 @@ export function getTokenUsingIam (
 
 function loadCredentials (): Promise<IAwsAuth.IAwsCredentials> {
   return new Promise((resolve, reject) => {
-    awscred.load((err, data) => {
-      if (err) {
-        return reject(err)
-      }
-
-      return resolve(data.credentials)
+    const credentials = new TokenFileWebIdentityCredentials()
+    credentials.refresh(err => {
+      if (err) return reject(err)
+      const { accessKeyId, secretAccessKey, sessionToken } = credentials
+      return resolve({
+        accessKeyId,
+        secretAccessKey,
+        sessionToken
+      })
     })
   })
 }
